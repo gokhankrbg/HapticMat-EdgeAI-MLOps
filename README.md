@@ -1,9 +1,9 @@
-# HapticMat-EdgeAI-MLOps: End-to-End Quantized Person Detection Pipeline
+# ExecuTorch MLOps Haptic Mat — Quantized Person Detection Pipeline
 
 An end-to-end **MLOps framework** for deploying **quantized person-detection models** on an **Android-based haptic mat system** using **STM32 pressure sensing** and **ExecuTorch**.
 
-This repository demonstrates a complete, production-ready pipeline connecting PyTorch model development with on-device Android runtime:
-**Data Collection → PyTorch Training → PTQ Quantization → MLflow Tracking → MinIO Storage → Jenkins CI/CD → Android ExecuTorch Inference (XNNPACK)**.
+This repo extends the original ExecuTorch MobileNet demo with a production-ready pipeline:
+**Python PTQ + MLflow + MinIO + Jenkins CI/CD + Android ExecuTorch inference**.
 
 Developed in collaboration with **Seroton GmbH**.
 
@@ -58,21 +58,21 @@ flowchart LR
     %% ========== PIPELINES ==========
 
     %% Script → MLflow
-    Script -->|1. Train, Quantize & Log<br/>(Artifacts & Metrics)| MLflow
+    Script -->|1. Train, Quantize & Log<br/>"(Artifacts & Metrics)"| MLflow
 
     %% MLflow → Backend Stores
     MLflow -->|runs, params, metrics| MySQL
-    MLflow -->|artifacts<br/>(Staging Bucket)| Minio
+    MLflow -->|artifacts<br/>"(Staging Bucket)"| Minio
 
     %% Jenkins → MLflow → MinIO
     Jenkins -->|2. Trigger & Fetch latest run| MLflow
-    Jenkins -->|Download artifacts<br/>(from Staging)| Minio
+    Jenkins -->|Download artifacts<br/>"(from Staging)"| Minio
     Jenkins -->|3. SHA-256 Verification| Jenkins
-    Jenkins -->|4. Promote to Production<br/>(model.pte + latest.json)| Minio
+    Jenkins -->|4. Promote to Production<br/>"(model.pte + latest.json)"| Minio
 
     %% Android App → MinIO
-    Android -->|5. Check for Updates<br/>(GET latest.json)| Minio
-    Android -->|Download new model.pte<br/>(if SHA mismatch)| Minio
+    Android -->|5. Check for Updates<br/>"(GET latest.json)"| Minio
+    Android -->|Download new model.pte<br/>"(if SHA mismatch)"| Minio
     Android -->|6. On-device Inference<br/>ExecuTorch XNNPACK| Android
 
     %% STYLES
