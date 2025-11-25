@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  minio:
+    image: minio/minio:RELEASE.2024-10-13T13-34-11Z
+    container_name: minio
+    ports:
+      - "9000:9000" # S3 API
+      - "9001:9001" # Konsol
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: strongpassword123
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    # volumes: - ./minio_data:/data # Verilerin kalıcı depolanması için
+
+  mysql:
+    image: mysql:8.0.31
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: strongpassword123
+      MYSQL_DATABASE: mlflow_db
+    # KRİTİK DÜZELTME: MySQL'i uyumlu şifreleme yöntemini kullanmaya zorlar
+    command: --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pstrongpassword123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mlflow:
+    image: 50bc8a5aeacf # Sizin MLflow imajınızın ID'si
+    container_name: mlflow_server
+    ports:
+      - "5001:5000"
+    environment:
+      MLFLOW_S3_ENDPOINT_URL: http://minio:9000
+      AWS_ACCESS_KEY_ID: minioadmin
+      AWS_SECRET_ACCESS_KEY: strongpassword123
+    # MLflow'u başlatmadan önce pymysql'i kur ve sunucuyu başlat
+    command: /bin/bash -c "pip install pymysql && mlflow server --host 0.0.0.0 --port 5000 --backend-store-uri mysql+pymysql://root:strongpassword123@mysql:3306/mlflow_db --default-artifact-root s3://mlflow-artifacts/"
+    depends_on:
+      minio:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+
+  jenkins:
+    image: veribilimiokulu/jenkins:ltsjdk17-ansible9.5.1
+    container_name: mlops-jenkins
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    # KRİTİK DÜZELTME: apt komutlarını çalıştırmak için 'root' kullanıcısını belirtiyoruz
+    user: root
+    command: /bin/bash -c "apt update && apt install -y python3-venv && /usr/bin/tini -- /usr/local/bin/jenkins.sh"
+
+
+volumes:
+  jenkins_home:
+

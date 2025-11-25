@@ -1,0 +1,10 @@
+{
+    "model_name": "PersonDetectionQuantized",
+    "version": "1.0.0",
+    "sha256": "1cb12dcb46de3373c7b019cbe3245cb41d3949dbceee61e833d1acc6d33f719a",
+    "model_file": "app/src/main/assets/mv2_xnnpack.pte",
+    "metrics": {
+        "top1_accuracy": 0.85,
+        "latency_ms": 25.0
+    }
+}

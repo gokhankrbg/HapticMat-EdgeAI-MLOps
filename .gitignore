@@ -1,0 +1,45 @@
+# ============================================
+#  COMBINED REPO GITIGNORE 
+# ============================================
+
+# --- 1. MAIN ANDROID APP (Large Build Files) ---
+/android_app/build/
+/android_app/app/build/
+/android_app/.gradle/
+/android_app/.idea/
+/android_app/local.properties
+/android_app/app/*.apk
+/android_app/app/*.ap_
+/android_app/app/debug/
+/android_app/app/release/
+/android_app/captures/
+/android_app/.externalNativeBuild/
+/android_app/.cxx/
+
+# --- 2. PYTHON AND VIRTUAL ENVIRONMENT ---
+__pycache__/
+*.py[cod]
+*$py.class
+/venv/
+/env/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# --- 3. MODEL DEVELOPMENT (Large Data and Tools) ---
+# NOTE: The leading # signs have been removed from these lines. They are now active.
+# Large datasets should not be included.
+model_development/datasets/*.csv
+model_development/datasets/*.zip
+
+# Since the benchmark tool is also an Android project, its build files must be excluded.
+model_development/benchmarking_tool/build/
+model_development/benchmarking_tool/.gradle/
+model_development/benchmarking_tool/.idea/
+
+# Uncomment this below if the .pte files in the models/ directory become too large and you don't want them in the repo.
+# models/*.pte
+
+# --- 4. SYSTEM FILES ---
+.DS_Store
+Thumbs.db
