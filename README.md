@@ -193,6 +193,13 @@ This project successfully established a robust, end-to-end MLOps framework that 
 
 ---
 
+## Acknowledgments
+
+This project was executed as a collaborative effort between **Gökhan Karabag** and **Fauzi Sholichin** as part of a seminar project.
+We extend our gratitude to **Seroton GmbH** for their collaboration, support, and for providing the necessary resources and hardware platform to realize this end-to-end Edge AI implementation.
+
+---
+
 ## 6. References
 
 * **Advanced Science:** [Smart Haptic Mat System](https://advanced.onlinelibrary.wiley.com/doi/10.1002/advs.202402461)
